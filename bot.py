@@ -31,6 +31,23 @@ class Bot:
             return 'Not find'
         return [self.prod_dict[i] for i in final]
 
-
+    def find_in_subcategpry(self, ids):
+        with open('last_dict.pkl', 'rb') as f:
+            last_dict = pickle.load(f)
+        final = list()
+        ids = str(ids)
+        temp = self.model.most_similar(ids, topn=100)
+        id_sim = temp[::][0]
+        for i in range(len(temp)):
+            if (temp[i][1] > 0.5):
+                final.append(temp[i])
+        sub = last_dict[ids]
+        answer = list()
+        for i in final:
+            if last_dict[i[1]] == sub:
+                answer.append(self.prod_dict[i[0]])
+        if len(answer) == 0:
+            return 'No'
+        return answer
 
 

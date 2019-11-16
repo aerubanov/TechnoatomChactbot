@@ -64,13 +64,17 @@ def ml_part(query_string):
     if query_string[0] == '/':
         query_string = query_string[1:]
         res = ml.find_compl(query_string, 5)
-        return str(res)
+        return res
     if query_string[0] == '?':
         query_string = query_string[1:]
         res = ml.find_str(query_string)
-        return str(res)
+        return res
+    if query_string[0] == '!':
+        query_string = query_string[1:]
+        res = ml.find_in_subcategpry(query_string)
+        return res
     res = ml.find_similar(query_string, 5)
-    return str(res)
+    return res
 
 
 def agregate():
@@ -102,16 +106,23 @@ def main():
                     row = Log(user_id=event.user_id, text=event.text)
                     session.add(row)
                     session.commit()
-                    result = ml_part(event.text)
-                    #s = f'similar {result[0]}, comlimentar {result[1]}'
-                    s = result
-                    write_msg(event.user_id, event.random_id, s)
+                    try:
+                        result = ml_part(event.text)
+                        #s = f'similar {result[0]}, comlimentar {result[1]}'
+                        s = '\n'.join(result)
+                        write_msg(event.user_id, event.random_id, s)
+                    except (KeyError, TypeError) as e:
+                        print(e)
                 elif event.text in token_list:
                     user = User(user_id=event.user_id)
                     session.add(user)
                     session.commit()
                     write_msg(event.user_id, event.random_id,
-                              f'{VkBot(event.user_id)._USERNAME}, теперь ты авторизован!')
+                              f'{VkBot(event.user_id)._USERNAME}, теперь ты авторизован! Для того чтобы '
+                              f'найти похожии, просто введи id. Чтобы найти комплиментарные напиши /id id'
+                              f'чтобы найти по названию введди ?слово.'
+                              # f' Чтобы вернуть товары из смежной категориинапиши !id'
+                              )
                 else:
                     write_msg(event.user_id, event.random_id,
                               f'Привет {VkBot(event.user_id)._USERNAME}! У тебя нет доступа, пришли мне токен')
