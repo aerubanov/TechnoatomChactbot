@@ -95,7 +95,7 @@ def main():
                     session.add(user)
                     session.commit()
                     write_msg(event.user_id, event.random_id,
-                              '{VkBot(event.user_id)._USERNAME}, теперь ты авторизован!')
+                              f'{VkBot(event.user_id)._USERNAME}, теперь ты авторизован!')
                 else:
                     write_msg(event.user_id, event.random_id,
                               f'Привет {VkBot(event.user_id)._USERNAME}! У тебя нет доступа, пришли мне токен')

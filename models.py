@@ -9,3 +9,6 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(String)
+
+class Log(Base):
+    __tablename__ = 'logs'
