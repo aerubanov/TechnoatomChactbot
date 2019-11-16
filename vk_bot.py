@@ -62,10 +62,14 @@ class VkBot:
 
 def ml_part(query_string):
     if query_string[0] == '/':
-        query_string[1:]
+        query_string = query_string[1:]
         res = ml.find_compl(query_string, 5)
-    else:
-        res = ml.find_similar(query_string, 5)
+        return str(res)
+    if query_string[0] == '?':
+        query_string = query_string[1:]
+        res = ml.find_str(query_string)
+        return str(res)
+    res = ml.find_similar(query_string, 5)
     return str(res)
 
 
